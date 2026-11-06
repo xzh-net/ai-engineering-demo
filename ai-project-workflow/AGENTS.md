@@ -18,11 +18,12 @@
 3. 通用 draw.io 规范（XML 格式、样式词汇、走线约束）见 skill `business-flow-draw`
    的 `references/flowchart-guidelines.md`；底层 XML 规则见已装的全局 `drawio-skill`
 4. 图的坐标与文案**只存在于 `gen-*.py`**，说明书中不重复维护坐标表
+5. **命名配对**：`gen-<标识>.py` 与 `<标识>.drawio` 必须同标识（当前为 `iam-flow`），说明书标题可用中文；新图按此规则命名
 
 ## 构建命令
 
 ```powershell
-python3 docs\diagrams\gen-<图名>.py docs\diagrams\<图名>.drawio
+python3 docs\diagrams\gen-<标识>.py docs\diagrams\<标识>.drawio
 ```
 
 ## 验证要求（硬门槛，三条全过才算交付）
@@ -30,14 +31,9 @@ python3 docs\diagrams\gen-<图名>.py docs\diagrams\<图名>.drawio
 ```powershell
 # 1. 生成日志必须 nodes>0 且 edges>0
 # 2. 几何校验全 0（validate.py 属全局 drawio-skill）
-python3 C:\Users\admin\.config\opencode\skills\drawio-skill\scripts\validate.py docs\diagrams\<图名>.drawio --score
+python3 C:\Users\admin\.config\opencode\skills\drawio-skill\scripts\validate.py docs\diagrams\<标识>.drawio --score
 # 3. 文字与重叠自检
-python3 .opencode\skills\business-flow-draw\scripts\check-diagram.py docs\diagrams\<图名>.drawio
+python3 .opencode\skills\business-flow-draw\scripts\check-diagram.py docs\diagrams\<标识>.drawio
 ```
 
 详见 skill 的 `references/diagram-checklist.md`（含软检查判据与排错表）。
-
-## 待办
-
-- [ ] **设备码登录流程图**：占位，尚未创建。当前设备码流程是主图底部的一条横带，拆出时需
-      独立设计版面，并从主图移除该横带避免重复。

@@ -69,8 +69,11 @@
 
 | | 路径 |
 |---|---|
-| 图源（唯一坐标/文案权威） | `docs/diagrams/gen-<图名>.py` |
-| 产物 | `docs/diagrams/<图名>.drawio` |
+| 图源（唯一坐标/文案权威） | `docs/diagrams/gen-<标识>.py` |
+| 产物 | `docs/diagrams/<标识>.drawio` |
+
+> **命名配对**：`gen-<标识>.py` 与 `<标识>.drawio` **必须同标识**（如 `gen-iam-flow.py` ↔ `iam-flow.drawio`）；
+> 本说明书的标题可用中文。
 
 构建与校验命令见项目根 `AGENTS.md`。
 
