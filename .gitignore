@@ -1,0 +1,57 @@
+# ============================================================
+# ai-engineering-demo 忽略规则
+# 本仓库性质：纯文档 + 提示词 + Python 脚本 + draw.io 图，无重型构建
+# ============================================================
+
+# ---- 1. 构建 / 依赖产物 ----
+target/
+build/
+dist/
+out/
+node_modules/
+.npm/
+coverage/
+*.class
+*.jar
+*.war
+
+# ---- 2. Python 运行产物（本仓库有 gen-*.py / check-*.py）----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# ---- 3. 运行时 / 日志 / 临时 ----
+logs/
+*.log
+*.tmp
+
+# ---- 4. 本仓库特有：可再生的预览链接 ----
+# 由 drawio-skill 的 encode_drawio_url.py 生成，内嵌整图数据、改图即过期
+preview.url
+
+# ---- 5. 编辑器 / 操作系统 ----
+.idea/
+.vscode/
+*.swp
+*.swo
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# ============================================================
+# ⚠️ 意图声明：以下项目资产当前没有任何规则命中，也不许新增规则忽略
+#
+#   .opencode/                     项目级 skill（business-flow-draw）与配置
+#                                   —— 丢了它，"按设计说明书改图"整条链路失效
+#   docs/                          业务设计说明书（业务权威源）
+#   docs/diagrams/gen-*.py         图源（坐标与文案权威源）
+#   docs/diagrams/*.drawio         图产物 —— 虽由 gen 脚本生成，但按本仓库
+#                                  AGENTS.md「规格 + 图源 + 产物」定义属交付物，入库
+#
+# 若将来要忽略 .drawio（严格"只存源不存产物"），需同步修改
+# ai-project-workflow/AGENTS.md 的目录职责说明与 docs/business/*说明书.md §5。
+# ============================================================
