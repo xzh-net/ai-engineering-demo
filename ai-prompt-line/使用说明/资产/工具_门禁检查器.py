@@ -114,7 +114,8 @@ def check_agents(root):
         for w in ("候选", "已确认", "已生效", "已否决"):
             if w not in body18:
                 probs.append("§1.8 缺状态值「%s」（病层：项目 AGENTS）" % w)
-    holders = re.findall(r"\{[^{}\n]{1,24}\}", text)
+    holders = [h for h in re.findall(r"\{[^{}\n]{1,24}\}", text)
+               if not re.fullmatch(r"\{\d+\.\.\d+\}", h)]  # {1..5} 区间简写 = 合法速记，非占位
     for h in holders[:3]:
         probs.append("AGENTS 占位残留 %s（病层：项目 AGENTS；P1 生成自查不实）" % h)
     if len(holders) > 3:
@@ -175,7 +176,7 @@ def check_evidence(root, agents_text):
         found = re.findall(r"\bV-\d{1,3}\b", rid) or re.findall(r"\bV-\d{1,3}\b", " ".join(r))
         rep_ids.update(found)
         if i_judge is not None and i_judge < len(r):
-            j = r[i_judge].strip()
+            j = r[i_judge].strip().strip("*").strip()  # 剥 markdown 强调（**不适用** → 不适用），四值按语义比对
             if not any(j.startswith(v) for v in JUDGE_VALUES):
                 probs.append("判定「%s」不在四值（病层：报告）" % (j or "空"))
             if j.startswith("通过"):
@@ -184,6 +185,7 @@ def check_evidence(root, agents_text):
                     probs.append("通过项缺原始数据路径（病层：报告 / 验证记录）")
                 else:
                     for token in re.findall(r"[^\s，,；;）)]+\.(?:csv|log|txt|json|xlsx|md)", raw):
+                        token = token.strip("`")  # 反引号包裹的路径：剥引号后再判存在性
                         target = os.path.join(root, token.replace("/", os.sep))
                         if not os.path.exists(target):
                             probs.append("原始数据路径不存在：%s（病层：验证记录）" % token)
@@ -218,10 +220,10 @@ def check_links(root):
             name = os.path.basename(m.group(1).strip())
             if "{" in name or "*" in name or " " in name:
                 continue
-            if re.search(r"YYYY|MM|DD|阶段N|\.\.\.", name):
-                continue  # 命名模式示例，不是实体文件
-            if name.startswith(("模板_", "样例_", "标准_", "工具_")) or re.match(r"^(R|P\d)_", name):
-                continue  # 工具仓产物名，允许出现在项目的学习记录里
+            if re.search(r"YYYY|MM|DD|阶段N|验证阶段工作流|\.\.\.", name):
+                continue  # 命名约定词（分册命名本体/日期模式），不是实体文件
+            if name.startswith(("模板_", "标准_", "工具_")) or re.match(r"^(R|P\d)_", name):
+                continue  # 工具仓产物名，允许出现在项目文档里
             if name not in all_names:
                 probs.append("引用了不存在的文件 %s（出处 %s，病层：项目文档）"
                              % (name, os.path.relpath(p, root)))
