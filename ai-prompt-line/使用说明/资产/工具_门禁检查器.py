@@ -7,7 +7,6 @@
 用法：
     python 工具_门禁检查器.py --root <目标项目根>
     python 工具_门禁检查器.py            # 默认当前目录
-    python 工具_门禁检查器.py --selftest  # 对样例_完整项目跑回归，期望退出码 0
 """
 
 import argparse
@@ -308,13 +307,8 @@ def run(root):
 def main():
     ap = argparse.ArgumentParser(description="目标项目四项门禁检查（只读）")
     ap.add_argument("--root", default=".", help="目标项目根目录（默认当前目录）")
-    ap.add_argument("--selftest", action="store_true",
-                    help="对随附的样例_完整项目跑回归（期望退出码 0）")
     args = ap.parse_args()
-    if args.selftest:
-        root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "样例_完整项目")
-    else:
-        root = os.path.abspath(args.root)
+    root = os.path.abspath(args.root)
     if not os.path.isdir(root):
         print("目录不存在：%s" % root)
         return 2
